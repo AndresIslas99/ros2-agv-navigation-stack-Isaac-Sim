@@ -1,0 +1,29 @@
+# Build
+build/
+install/
+log/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# RTAB-Map database
+*.db
+
+# Maps (keep placeholder)
+maps/*.pgm
+!maps/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

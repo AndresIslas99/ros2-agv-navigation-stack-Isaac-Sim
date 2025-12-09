@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>ros2_agv_navigation_stack</name>
+  <version>2.0.0</version>
+  <description>
+    Production-ready ROS2 Navigation Stack for AGV/AMR platforms.
+    Features RTAB-Map 3D SLAM with multi-sensor fusion (LiDAR + Stereo + IMU),
+    Spatio-Temporal Voxel Layer for 3D obstacle avoidance, and Nav2 integration.
+    Configured for Nova Carter in NVIDIA Isaac Sim.
+  </description>
+  <maintainer email="andresislas99@icloud.com">Andrés Islas Bravo</maintainer>
+  <license>MIT</license>
+  <author email="andresislas99@icloud.com">Andrés Islas Bravo</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- RTAB-Map SLAM -->
+  <exec_depend>rtabmap_ros</exec_depend>
+  <exec_depend>rtabmap_launch</exec_depend>
+  <exec_depend>rtabmap_odom</exec_depend>
+  <exec_depend>rtabmap_slam</exec_depend>
+  <exec_depend>rtabmap_viz</exec_depend>
+  <exec_depend>rtabmap_util</exec_depend>
+
+  <!-- Sensor Fusion -->
+  <exec_depend>robot_localization</exec_depend>
+  <exec_depend>imu_filter_madgwick</exec_depend>
+
+  <!-- Core Navigation -->
+  <exec_depend>nav2_bringup</exec_depend>
+  <exec_depend>nav2_bt_navigator</exec_depend>
+  <exec_depend>nav2_controller</exec_depend>
+  <exec_depend>nav2_planner</exec_depend>
+  <exec_depend>nav2_behaviors</exec_depend>
+  <exec_depend>nav2_waypoint_follower</exec_depend>
+  <exec_depend>nav2_lifecycle_manager</exec_depend>
+  <exec_depend>nav2_map_server</exec_depend>
+  <exec_depend>nav2_costmap_2d</exec_depend>
+
+  <!-- 3D Costmap Layer -->
+  <exec_depend>spatio_temporal_voxel_layer</exec_depend>
+
+  <!-- Image Processing for Stereo -->
+  <exec_depend>image_transport</exec_depend>
+  <exec_depend>stereo_image_proc</exec_depend>
+  <exec_depend>depth_image_proc</exec_depend>
+
+  <!-- TF & Core -->
+  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>tf2_sensor_msgs</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+
+  <!-- Visualization -->
+  <exec_depend>rviz2</exec_depend>
+  <exec_depend>rviz_default_plugins</exec_depend>
+
+  <!-- Utils -->
+  <exec_depend>ros2launch</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

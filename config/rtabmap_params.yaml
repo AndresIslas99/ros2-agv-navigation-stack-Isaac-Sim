@@ -1,0 +1,149 @@
+# =============================================================================
+# RTAB-Map Parameters for Nova Carter in Isaac Sim
+# Author: Andrés Islas Bravo
+# Description: Multi-sensor SLAM with 3D LiDAR, Stereo Camera, and IMU fusion
+# =============================================================================
+
+rtabmap:
+  ros__parameters:
+    use_sim_time: true
+    
+    # Frame configuration
+    frame_id: base_link
+    odom_frame_id: odom
+    map_frame_id: map
+    
+    # Subscribe to sensors
+    subscribe_depth: false          # Using stereo, not depth
+    subscribe_stereo: true          # Enable stereo camera
+    subscribe_scan_cloud: true      # Enable 3D LiDAR point cloud
+    subscribe_odom_info: true
+    
+    # Queue sizes for synchronization
+    queue_size: 30
+    sync_queue_size: 30
+    
+    # Approximate sync for simulation (critical for Isaac Sim)
+    approx_sync: true
+    approx_sync_max_interval: 0.1   # 100ms tolerance
+    
+    # Topic remappings will be done in launch file
+    
+    # --- RTAB-Map Core Parameters ---
+    
+    # General
+    Rtabmap/DetectionRate: "2.0"              # Hz, process rate
+    Rtabmap/TimeThr: "0.0"                     # No time limit per iteration
+    Rtabmap/MemoryThr: "0"                     # No memory limit
+    
+    # Loop Closure Detection
+    Kp/MaxFeatures: "500"                      # Features per image
+    Kp/DetectorStrategy: "8"                   # ORB detector (fast)
+    Kp/NNStrategy: "1"                         # KD-Tree for matching
+    
+    # Visual Odometry (when stereo is primary)
+    Odom/Strategy: "0"                         # 0=Frame-to-Map, 1=Frame-to-Frame
+    Odom/GuessMotion: "true"
+    Odom/ResetCountdown: "0"
+    
+    # ICP Odometry for LiDAR
+    Icp/Strategy: "1"                          # Point-to-Plane ICP
+    Icp/MaxTranslation: "0.5"                  # Max translation per iteration
+    Icp/MaxCorrespondenceDistance: "0.1"       # 10cm correspondence
+    Icp/Iterations: "30"
+    Icp/VoxelSize: "0.05"                      # 5cm voxel downsampling
+    Icp/PointToPlane: "true"
+    Icp/PointToPlaneK: "20"                    # K neighbors for normal estimation
+    Icp/PointToPlaneRadius: "0.0"              # Use K neighbors, not radius
+    Icp/Epsilon: "0.001"
+    
+    # Graph Optimization
+    Optimizer/Strategy: "2"                    # GTSAM optimizer
+    Optimizer/Iterations: "20"
+    Optimizer/Slam2D: "false"                  # 3D SLAM
+    RGBD/OptimizeMaxError: "3.0"               # Max error to reject outliers
+    
+    # Loop Closure
+    RGBD/ProximityBySpace: "true"              # Spatial proximity detection
+    RGBD/ProximityMaxGraphDepth: "0"           # Check all nodes
+    RGBD/ProximityPathMaxNeighbors: "10"
+    RGBD/AngularUpdate: "0.1"                  # ~5.7 degrees
+    RGBD/LinearUpdate: "0.1"                   # 10cm
+    RGBD/LocalRadius: "10.0"                   # 10m local map radius
+    RGBD/NeighborLinkRefining: "true"
+    RGBD/ProximityByTime: "false"
+    
+    # Memory Management
+    Mem/IncrementalMemory: "true"              # Online SLAM
+    Mem/InitWMWithAllNodes: "false"
+    Mem/STMSize: "30"                          # Short-term memory nodes
+    Mem/RehearsalSimilarity: "0.3"             # Node similarity threshold
+    
+    # 3D Grid Map (for visualization)
+    Grid/3D: "true"
+    Grid/CellSize: "0.05"                      # 5cm grid cells
+    Grid/RangeMin: "0.3"                       # Min range filter
+    Grid/RangeMax: "15.0"                      # Max range filter
+    Grid/RayTracing: "true"
+    Grid/ClusterRadius: "0.1"
+    Grid/GroundIsObstacle: "false"
+    Grid/MaxGroundHeight: "0.1"                # Ground plane threshold
+    Grid/MaxObstacleHeight: "2.0"              # Max obstacle height
+    Grid/MinClusterSize: "10"
+    Grid/NoiseFilteringMinNeighbors: "5"
+    Grid/NoiseFilteringRadius: "0.1"
+    Grid/NormalsSegmentation: "true"
+    Grid/Sensor: "0"                           # 0=Laser
+    
+    # Stereo Parameters
+    Stereo/MaxDisparity: "128.0"
+    Stereo/MinDisparity: "0.0"
+    Stereo/WinSize: "15"
+    Stereo/OpticalFlow: "true"
+    
+    # Vis (Visual) Parameters
+    Vis/CorType: "0"                           # Features matching
+    Vis/EstimationType: "1"                    # 3D->3D motion estimation
+    Vis/FeatureType: "8"                       # ORB features
+    Vis/MaxFeatures: "1000"
+    Vis/MinInliers: "15"                       # Min inliers for valid transform
+
+# RTAB-Map Odometry Node (ICP-based for LiDAR)
+rtabmap_odom:
+  ros__parameters:
+    use_sim_time: true
+    frame_id: base_link
+    odom_frame_id: odom
+    publish_tf: true
+    wait_for_transform_duration: 0.2
+    approx_sync: true
+    queue_size: 30
+    
+    # Use ICP odometry from 3D LiDAR
+    Odom/Strategy: "1"                         # 1 = ICP
+    Odom/GuessMotion: "true"
+    Odom/ResetCountdown: "1"
+    Odom/Holonomic: "false"                    # Differential drive
+    
+    # ICP parameters
+    Icp/Strategy: "1"                          # Point-to-Plane
+    Icp/VoxelSize: "0.05"
+    Icp/MaxCorrespondenceDistance: "0.15"
+    Icp/PointToPlane: "true"
+    Icp/Iterations: "30"
+    Icp/Epsilon: "0.001"
+    
+    # Scan processing
+    scan_cloud_max_points: "0"                 # 0 = no limit
+    scan_cloud_normal_k: "20"
+
+# RTAB-Map Visualization Node
+rtabmap_viz:
+  ros__parameters:
+    use_sim_time: true
+    frame_id: base_link
+    odom_frame_id: odom
+    subscribe_odom_info: true
+    subscribe_scan_cloud: true
+    approx_sync: true
+    queue_size: 30
