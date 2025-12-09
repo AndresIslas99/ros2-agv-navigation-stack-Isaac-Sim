@@ -8,6 +8,7 @@
 Production-ready navigation stack for AGV/AMR platforms featuring **RTAB-Map 3D SLAM** with multi-sensor fusion (3D LiDAR + Stereo Camera + IMU), **Spatio-Temporal Voxel Layer** for true 3D obstacle detection, and full Nav2 integration. Configured for the **Nova Carter** robot in **NVIDIA Isaac Sim**.
 
 ![Navigation Demo](docs/nav_demo.gif)
+![AGV Navigation Demo](docs/agvROS2.jpeg)
 
 ## Features
 
